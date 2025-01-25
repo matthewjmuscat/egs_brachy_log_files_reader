@@ -7,7 +7,13 @@ def find_log_files(base_path):
     patient_folders = [f for f in os.listdir(base_path) if re.match(r'PT\d{4}', f)]
     log_files = []
     for folder in patient_folders:
-        tg43_path = os.path.join(base_path, folder, 'TG43', 'phantom')
+        folder_path = os.path.join(base_path, folder)  # Full path to the patient folder
+        tg43_path = os.path.join(folder_path, 'TG43', 'phantom')
+
+        # Check if the patient folder is a directory
+        if not os.path.isdir(folder_path):
+            continue  # Skip to the next iteration if not a directory
+
         # Check if the TG43/phantom directory exists before attempting to access it
         if os.path.exists(tg43_path):
             # Extract the four-digit number from the folder name
@@ -69,7 +75,11 @@ def write_to_csv(log_files, output_csv):
 
 
 # Base path where the patient data is stored
-base_path = '/home/mjm/Documents/UBC/Research/nextgenbrachy/patient data/Prostate Patients (Dakota 2022-2020)'
+#base_path = '/home/mjm/Documents/UBC/Research/nextgenbrachy/patient data/Prostate Patients (Dakota 2022-2020)'
+base_path = '/home/mjm/Documents/UBC/Research/nextgenbrachy/patient data/Prostate Patients (Matt 2022-2020)'
 log_files = find_log_files(base_path)
 output_csv = base_path+'/'+'calcification_voxel_counts.csv'  # Define your output CSV file path here
 write_to_csv(log_files, output_csv)
+
+print("Finished! Press Enter to continue...")
+input()
